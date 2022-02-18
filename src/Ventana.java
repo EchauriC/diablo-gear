@@ -1,10 +1,14 @@
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
 
@@ -16,70 +20,17 @@ import javax.swing.text.StyledDocument;
 
 /**
  *
- * @author Programacion
+ * @author EchauriC
  */
 public class Ventana extends javax.swing.JFrame {
 
-    String[] principales = {"principal 1", "principal 2"};
-    String[] secundarios = {"secundarios 1", "secundarios 2"};
-
-    String textoPlaceholder = "What is Lorem Ipsum?\n"
-            + "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\n"
-            + "\n"
-            + "Why do we use it?\n"
-            + "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).\n"
-            + "\n"
-            + "\n"
-            + "Where does it come from?\n"
-            + "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of \"de Finibus Bonorum et Malorum\" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, \"Lorem ipsum dolor sit amet..\", comes from a line in section 1.10.32.\n"
-            + "\n"
-            + "The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from \"de Finibus Bonorum et Malorum\" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.\n"
-            + "\n"
-            + "Where can I get some?\n"
-            + "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.";
-   
+    boolean dev = true;
+    
     /**
      * Creates new form Ventana
      */
     public Ventana() {
         initComponents();
-
-        for (int i = 0; i < principales.length; i++) {
-            System.out.println( i + " - " + principales[i]);
-        }
-
-        for (int i = 0; i < secundarios.length; i++) {
-            System.out.println( i + " - " + secundarios[i]);
-        }
-        
-        File archivoJson = new File("resources/sunwuko.json");
-        try {
-            Set sunwuko = new ObjectMapper().readerFor(Set.class).readValue(archivoJson);
-
-            //System.out.println(sunwuko.toString());
-            //System.out.println(sunwuko.cabeza.toString());
-            StyledDocument documento = jTextPane1.getStyledDocument();
-            jTextPane1.insertIcon ( new ImageIcon ( "resources/" + sunwuko.cabeza.getImagen() ) );
-            documento.insertString(documento.getLength(), sunwuko.cabeza.toString(), null);
-            
-            jTextPane1.insertIcon ( new ImageIcon ( "resources/" + sunwuko.hombros.getImagen() ) );
-            documento.insertString(documento.getLength(), sunwuko.hombros.toString(), null);
-            
-            jTextPane1.insertIcon ( new ImageIcon ( "resources/" + sunwuko.cuello.getImagen() ) );
-            documento.insertString(documento.getLength(), sunwuko.cuello.toString(), null);
-            
-            jTextPane1.insertIcon ( new ImageIcon ( "resources/" + sunwuko.manos.getImagen() ) );
-            documento.insertString(documento.getLength(), sunwuko.manos.toString(), null);
-            
-            jTextPane1.insertIcon ( new ImageIcon ( "resources/" + sunwuko.piernas.getImagen() ) );
-            documento.insertString(documento.getLength(), sunwuko.piernas.toString(), null);
-            
-            jTextPane1.insertIcon ( new ImageIcon ( "resources/" + sunwuko.torso.getImagen() ) );
-            documento.insertString(documento.getLength(), sunwuko.torso.toString(), null);
-            
-        } catch (IOException | BadLocationException ex) {
-            Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     /**
@@ -116,6 +67,11 @@ public class Ventana extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sunwuko", "Inna", "Mil tormentas" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
         jButton1.setText("Cargar");
 
@@ -190,6 +146,7 @@ public class Ventana extends javax.swing.JFrame {
 
         getContentPane().add(jPanel2, java.awt.BorderLayout.WEST);
 
+        jTextPane1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jScrollPane1.setViewportView(jTextPane1);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -211,6 +168,12 @@ public class Ventana extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+        String opcion= jComboBox1.getSelectedItem().toString();
+        cargarConjunto(opcion);
+    }//GEN-LAST:event_jComboBox1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -247,6 +210,76 @@ public class Ventana extends javax.swing.JFrame {
         });
     }
 
+    /**
+     * Esta función se encarga de cargar un archivo JSON y convertirlo en un
+     * objeto Java de tipo Set.
+     * 
+     * @param nombreConjunto = nombre del Set a cargar, que a su vez será el
+     * nombre del archivo JSON a cargar. Los espacios en blanco se reemplazan por
+     * guiones '-' y las mayúsculas serán convertidas a minúsculas.
+     */
+    private void cargarConjunto(String nombreConjunto){
+        
+        try {
+            //Saneamos el string, cargamos archivo y casteamos a Set.
+            File archivoJson = new File("resources/"+ nombreConjunto.toLowerCase().replace(" ", "-")+".json");
+            Set conjunto = new ObjectMapper().readerFor(Set.class).readValue(archivoJson);
+
+            //Se inicializa el Componente visual donde se mostrarán los datos.
+            // TODO: crear función propia con componentes mejor estructurados
+            StyledDocument documento = jTextPane1.getStyledDocument();
+            
+            //Obtenemos todos los objetos de clase Item en el Set cargado y, por 
+            //cada uno, obtenemos su representación visual.
+            ArrayList<Item> itemsDisponibles = conjunto.getAllItems();
+            for(Item item : itemsDisponibles){
+                jTextPane1.insertIcon ( new ImageIcon ( "resources/" + item.getImagen() ) );
+                documento.insertString(documento.getLength(), item.toString(), null);
+            }
+            
+            //CODIGO PROPUESTO POR JAVI, PARA EL CARDLAYOUT
+            //add to parent panel
+            //masterpanel.add(auth, "auth");
+            //masterpanel.add(message, "message");
+            //
+            //((CardLayout) masterpanel.getLayout()).next(masterpanel);
+            // show(masterpanel.id)
+            
+        // El formato del archivo JSON no es correcto
+        } catch (UnrecognizedPropertyException ex) {
+            
+            if(dev) Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+            
+            JOptionPane.showMessageDialog(new JFrame(), 
+                    "El formato del archivo no es correcto. Comprueba las "
+                            + "directrices para escribirtu propio JSON en el "
+                            + "anual o utiliza la plantilla proveída con el programa.",
+                    "Error al cargar archivo", 
+                    JOptionPane.ERROR_MESSAGE);
+        
+        // Causa comun: Archivo no encontrado
+        } catch (IOException ex) {
+            if(dev) Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+            
+            JOptionPane.showMessageDialog(new JFrame(), 
+                    "No se ha encontrado el archivo "
+                        + "correspondiente al Set seleccionado. Comprueba que el"
+                        + " archivo se encuentra en la carpeta 'resources'.",
+                    "Error al cargar archivo", 
+                    JOptionPane.ERROR_MESSAGE);
+            
+        // No se ha podido escribir la información en la ventana de visualización
+        } catch (BadLocationException ex) {
+            if(dev) Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+            
+            JOptionPane.showMessageDialog(new JFrame(), 
+                    "La información no puede ser escrita. Comprueba que el"
+                        + " formato del archivo es el adecuado. Algunos caracteres"
+                        + " especiales no son soportados.",
+                    "Error al mostrar datos", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;

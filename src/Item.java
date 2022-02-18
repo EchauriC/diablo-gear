@@ -7,7 +7,7 @@ import java.util.Arrays;
  */
 /**
  *
- * @author Programacion
+ * @author EchauriC
  */
 public class Item {
 

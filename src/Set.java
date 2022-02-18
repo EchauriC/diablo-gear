@@ -1,5 +1,7 @@
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -9,7 +11,12 @@ import java.util.Map;
  */
 /**
  *
- * @author Programacion
+ * @author EchauriC
+ * 
+ * Esta clase representa un Set (conjunto predefinido de objetos que dan bonificaciones
+ * adicionales o habilidades al llevarlos juntos) del videojuego Daiblo 3. Cada 
+ * Set contiene unas piezas fijas, y no tiene porque contener una pieza de cada 
+ * tipo que existe en el juego.
  */
 public class Set {
 
@@ -30,6 +37,13 @@ public class Set {
     Item arma;
     Item secundaria;
 
+    /**
+     * Esta funcion indica a la libreria Jackson que debe realizar una acción 
+     * en concreto cuando el Mapeador encuentra la propiedad "item". En este caso,
+     * esa propiedad se castea a un objeto de Clase Item y se asigna en la 
+     * propiedad adecuada del Objeto Set padre.
+     * @param itemInJson 
+     */
     @JsonProperty("item")
     private void itemFromJson(Map<String, Object> itemInJson) {
 
@@ -105,4 +119,53 @@ public class Set {
         return "nombre: " + this.nombre + " - bonus: " + Arrays.toString(this.bonus);
     }
 
+    /**
+     * Obtenemos todos los Item del Set en forma de ArrayList
+     * @return ArrayList<Item>
+     */
+    public ArrayList<Item> getAllItems() {
+
+        ArrayList<Item> items = new ArrayList<Item>();
+
+        if (this.cabeza != null) {
+            items.add(this.cabeza);
+        }
+        if (this.hombros != null) {
+            items.add(this.hombros);
+        }
+        if (this.cuello != null) {
+            items.add(this.cuello);
+        }
+        if (this.torso != null) {
+            items.add(this.torso);
+        }
+        if (this.manos != null) {
+            items.add(this.manos);
+        }
+        if (this.brazales != null) {
+            items.add(this.brazales);
+        }
+        if (this.cintura != null) {
+            items.add(this.cintura);
+        }
+        if (this.piernas != null) {
+            items.add(this.piernas);
+        }
+        if (this.dedoIzquierdo != null) {
+            items.add(this.dedoIzquierdo);
+        }
+        if (this.dedoDerecho != null) {
+            items.add(this.dedoDerecho);
+        }
+        if (this.pies != null) {
+            items.add(this.pies);
+        }
+        if (this.arma != null) {
+            items.add(this.arma);
+        }
+        if (this.secundaria != null) {
+            items.add(this.secundaria);
+        }
+        return items;
+    }
 }
