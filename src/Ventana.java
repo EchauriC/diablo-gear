@@ -252,8 +252,8 @@ public class Ventana extends javax.swing.JFrame {
             
             JOptionPane.showMessageDialog(new JFrame(), 
                     "El formato del archivo no es correcto. Comprueba las "
-                            + "directrices para escribirtu propio JSON en el "
-                            + "anual o utiliza la plantilla proveída con el programa.",
+                            + "directrices para escribir tu propio JSON en el "
+                            + "manual o utiliza la plantilla proveída con el programa.",
                     "Error al cargar archivo", 
                     JOptionPane.ERROR_MESSAGE);
         
@@ -264,7 +264,8 @@ public class Ventana extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(new JFrame(), 
                     "No se ha encontrado el archivo "
                         + "correspondiente al Set seleccionado. Comprueba que el"
-                        + " archivo se encuentra en la carpeta 'resources'.",
+                        + " archivo se encuentra en la carpeta 'resources' y que "
+                        + "el nombre del archivo sigue las directrices del manual.",
                     "Error al cargar archivo", 
                     JOptionPane.ERROR_MESSAGE);
             
