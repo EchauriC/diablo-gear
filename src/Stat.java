@@ -43,5 +43,8 @@ public class Stat {
         this.principal = principal;
     }
     
-    
+    @Override
+    public String toString(){
+        return "["+this.key+"] " + this.value;
+    }
 }

@@ -73,4 +73,18 @@ public class StatsParser {
         }
         return statsObjects;
     }
+    
+    public String getPrincipalById(int id){
+        if(id < this.principales.length)
+            return this.principales[id];
+        else
+            return "";
+    }
+    
+    public String getSecundarioById(int id){
+        if(id < this.secundarios.length)
+            return this.secundarios[id];
+        else
+            return "";
+    }
 }

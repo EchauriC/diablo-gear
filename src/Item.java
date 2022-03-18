@@ -1,4 +1,5 @@
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /*
@@ -15,8 +16,8 @@ public class Item {
     String tipo;
     String imagen;
 
-    String[] principales;
-    String[] secundarios;
+    int[] principales;
+    int[] secundarios;
 
     int principalesMax;
     int secundariosMax;
@@ -45,19 +46,19 @@ public class Item {
         this.imagen = imagen;
     }
 
-    public String[] getPrincipales() {
+    public int[] getPrincipales() {
         return principales;
     }
 
-    public void setPrincipales(String[] principales) {
+    public void setPrincipales(int[] principales) {
         this.principales = principales;
     }
 
-    public String[] getSecundarios() {
+    public int[] getSecundarios() {
         return secundarios;
     }
 
-    public void setSecundarios(String[] secundarios) {
+    public void setSecundarios(int[] secundarios) {
         this.secundarios = secundarios;
     }
 
@@ -76,7 +77,45 @@ public class Item {
     public void setSecundariosMax(int secundariosMax) {
         this.secundariosMax = secundariosMax;
     }
+    
+    public void removePrincipalById(int id){
+        int[] temp = new int[principales.length - 1]; 
+ 
+        // copy all the elements in the original to proxy array except the one at index 
+        for (int i = 0, k = 0; i < principales.length; i++) { 
+ 
+            // check if index is crossed, continue without copying 
+            if (principales[i] == id) { 
+                continue; 
+            } 
+ 
+            // else copy the element
+            temp[k++] = principales[i]; 
+        }
+        
+        principales = temp;
+        
+    }
 
+    public void removeSecundarioById(int id){
+        int[] temp = new int[secundarios.length - 1]; 
+ 
+        // copy all the elements in the original to proxy array except the one at index 
+        for (int i = 0, k = 0; i < secundarios.length; i++) { 
+ 
+            // check if index is crossed, continue without copying 
+            if (secundarios[i] == id) { 
+                continue; 
+            } 
+ 
+            // else copy the element
+            temp[k++] = secundarios[i]; 
+        }
+        
+        secundarios = temp;
+        
+    }
+        
     @Override
     public String toString() {
         //return super.toString(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody

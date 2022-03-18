@@ -12,14 +12,19 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -36,15 +41,54 @@ public class Ventana implements ActionListener{
     boolean devMode = true;
     
     StatsParser statsParser;
+    Set conjunto;
+    ArrayList<Item> itemsDisponibles;
+    
     
     JFrame jFrame;
+    
     JPanel north;
     JComboBox opcionesDefault;
+    
     JPanel west;
+    JButton cabeza;
+    JButton hombros;
+    JButton cuello;
+    JButton torso;
+    JButton manos;
+    JButton brazales;
+    JButton cintura;
+    JButton piernas;
+    JButton dedoIzq;
+    JButton dedoDer;
+    JButton pies;
+    JButton arma;
+    JButton secundaria;
+    
     JPanel center;
     CardLayout itemsCardLayout;
+    JPanel cabezaCard;
+    JPanel hombrosCard;
+    JPanel cuelloCard;
+    JPanel torsoCard;
+    JPanel manosCard;
+    JPanel brazalesCard;
+    JPanel cinturaCard;
+    JPanel piernasCard;
+    JPanel dedoIzqCard;
+    JPanel dedoDerCard;
+    JPanel piesCard;
+    JPanel armaCard;
+    JPanel secundariaCard;
+    
+    
     JPanel east;
     JPanel south;
+    
+    // Control de errores
+    boolean fileLoadError;
+    
+    String ultimaCardSeleccionada;
     
     public Ventana(){
         
@@ -94,20 +138,22 @@ public class Ventana implements ActionListener{
         //Panel west sus componentes y listeners
         west = new JPanel(new GridLayout(0, 2));
         ////Botones para cambiar pestaña de items
-        JButton cabeza = new JButton("Cabeza");
-        JButton hombros = new JButton("Hombros");
-        JButton cuello = new JButton("Cuello");
-        JButton torso = new JButton("Torso");
-        JButton manos = new JButton("Manos");
-        JButton brazales = new JButton("Brazales");
-        JButton cintura = new JButton("Cintura");
-        JButton piernas = new JButton("Piernas");
-        JButton dedoIzq = new JButton("Dedo Izq");
-        JButton dedoDer = new JButton("Dedo Der");
-        JButton pies = new JButton("Pies");
-        JButton arma = new JButton("Arma");
-        JButton secundaria = new JButton("Secundaria");
-        ///Añadimos el action listener que realizará el cambio de pestaña
+        cabeza = new JButton("Cabeza");
+        hombros = new JButton("Hombros");
+        cuello = new JButton("Cuello");
+        torso = new JButton("Torso");
+        manos = new JButton("Manos");
+        brazales = new JButton("Brazales");
+        cintura = new JButton("Cintura");
+        piernas = new JButton("Piernas");
+        dedoIzq = new JButton("Dedo Izq");
+        dedoDer = new JButton("Dedo Der");
+        pies = new JButton("Pies");
+        arma = new JButton("Arma");
+        secundaria = new JButton("Secundaria");
+        //// Desactivamos todos los botones
+        desactivarBotonesCardLayout();
+        //// Añadimos el action listener que realizará el cambio de pestaña
         ItemsCardLayoutListener itemsCardLayoutListener = new ItemsCardLayoutListener();
         cabeza.addActionListener(itemsCardLayoutListener);
         hombros.addActionListener(itemsCardLayoutListener);
@@ -141,19 +187,33 @@ public class Ventana implements ActionListener{
         itemsCardLayout = new CardLayout();
         center = new JPanel();
         center.setLayout(itemsCardLayout);
-        JPanel cabezaCard = new JPanel();
-        JPanel hombrosCard = new JPanel();
-        JPanel cuelloCard = new JPanel();
-        JPanel torsoCard = new JPanel();
-        JPanel manosCard = new JPanel();
-        JPanel brazalesCard = new JPanel();
-        JPanel cinturaCard = new JPanel();
-        JPanel piernasCard = new JPanel();
-        JPanel dedoIzqCard = new JPanel();
-        JPanel dedoDerCard = new JPanel();
-        JPanel piesCard = new JPanel();
-        JPanel armaCard = new JPanel();
-        JPanel secundariaCard = new JPanel();
+        cabezaCard = new JPanel();
+        hombrosCard = new JPanel();
+        cuelloCard = new JPanel();
+        torsoCard = new JPanel();
+        manosCard = new JPanel();
+        brazalesCard = new JPanel();
+        cinturaCard = new JPanel();
+        piernasCard = new JPanel();
+        dedoIzqCard = new JPanel();
+        dedoDerCard = new JPanel();
+        piesCard = new JPanel();
+        armaCard = new JPanel();
+        secundariaCard = new JPanel();
+        
+        cabezaCard.setLayout(new BoxLayout(cabezaCard, BoxLayout.Y_AXIS));
+        hombrosCard.setLayout(new BoxLayout(hombrosCard, BoxLayout.Y_AXIS));
+        cuelloCard.setLayout(new BoxLayout(cuelloCard, BoxLayout.Y_AXIS));
+        torsoCard.setLayout(new BoxLayout(torsoCard, BoxLayout.Y_AXIS));
+        manosCard.setLayout(new BoxLayout(manosCard, BoxLayout.Y_AXIS));
+        brazalesCard.setLayout(new BoxLayout(brazalesCard, BoxLayout.Y_AXIS));
+        cinturaCard.setLayout(new BoxLayout(cinturaCard, BoxLayout.Y_AXIS));
+        piernasCard.setLayout(new BoxLayout(piernasCard, BoxLayout.Y_AXIS));
+        dedoIzqCard.setLayout(new BoxLayout(dedoIzqCard, BoxLayout.Y_AXIS));
+        dedoDerCard.setLayout(new BoxLayout(dedoDerCard, BoxLayout.Y_AXIS));
+        piesCard.setLayout(new BoxLayout(piesCard, BoxLayout.Y_AXIS));
+        armaCard.setLayout(new BoxLayout(armaCard, BoxLayout.Y_AXIS));
+        secundariaCard.setLayout(new BoxLayout(secundariaCard, BoxLayout.Y_AXIS));
         
         center.add( cabezaCard ,"Cabeza");
         center.add( hombrosCard ,"Hombros");
@@ -243,16 +303,16 @@ public class Ventana implements ActionListener{
         
         try {
             // Cargamos archivo, mapeamos propiedades y casteamos a Set e Items
-            Set conjunto = new ObjectMapper().readerFor(Set.class).readValue(archivoJson);
-
-            //Obtenemos todos los objetos de clase Item en el Set cargado y, por 
-            //cada uno, obtenemos su representación visual.
-            ArrayList<Item> itemsDisponibles = conjunto.getAllItems();
+            conjunto = new ObjectMapper().readerFor(Set.class).readValue(archivoJson);
+            //Obtenemos todos los objetos de clase Item en el Set cargado
+            itemsDisponibles = conjunto.getAllItems();
 
         // El formato del archivo JSON no es correcto
         } catch (UnrecognizedPropertyException ex) {
             
             if(devMode) Logger.getLogger(VentanaLegacy.class.getName()).log(Level.SEVERE, null, ex);
+            
+            fileLoadError = true;
             
             JOptionPane.showMessageDialog(new JFrame(), 
                     "El formato del archivo no es correcto. Comprueba las "
@@ -264,6 +324,8 @@ public class Ventana implements ActionListener{
         // Causa comun: Archivo no encontrado
         } catch (IOException ex) {
             if(devMode) Logger.getLogger(VentanaLegacy.class.getName()).log(Level.SEVERE, null, ex);
+            
+            fileLoadError = true;
             
             JOptionPane.showMessageDialog(new JFrame(), 
                     "No se ha encontrado el archivo "
@@ -278,47 +340,432 @@ public class Ventana implements ActionListener{
     
     @Override
     public void actionPerformed(ActionEvent ae) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//        JButton boton = (JButton)ae.getSource();
-//        
-//        switch (boton.getActionCommand()) {
-//            case "default":
-//                //Saneamos el string y preparamos el File
-//                String opcion = opcionesDefault.getSelectedItem().toString();
-//                File archivoJson = new File("resources/"+ sanearString(opcion));
-//                break;
-//            case "file":
-//                
-//                break;
-//            default:
-//                
-//        }
         
-        // Cargamos archivo y casteamos a Set.
-                 
-        //Se inicializa el Componente visual donde se mostrarán los datos.
-        // TODO: crear función propia con componentes mejor estructurados
-//            StyledDocument documento = jTextPane1.getStyledDocument();
-//            jTextPane1.setEnabled(false);
-//            jTextPane1.setVisible(false);
-//            for(Item item : itemsDisponibles){
-//                jTextPane1.insertIcon ( new ImageIcon ( "resources/" + item.getImagen() ) );
-//                documento.insertString(documento.getLength(), item.toString(), null);
-//            }
-
+        JButton boton = (JButton)ae.getSource();
+        File archivoJson;
+        fileLoadError = false;
+        
+        switch (boton.getActionCommand()) {
+            case "default":
+                //Saneamos el string y preparamos el File
+                String opcion = opcionesDefault.getSelectedItem().toString();
+                archivoJson = new File("resources/"+ sanearString(opcion));
+                // Cargamos el File y lo convertimos a objetos Java
+                cargarConjuntoDesdeJson(archivoJson);
+                
+                if ( !fileLoadError ){
+                    desactivarBotonesCardLayout();
+                    limpiarCardLayout();
+                    activarBotonesCardLayout();
+                    rellenarCards(true);
+                }
+                
+                break;
+                
+            case "file":
+                // Creamos un FileChooser que solo permite JSON y preparamos el File
+                final JFileChooser fc = new JFileChooser();
+                fc.setAcceptAllFileFilterUsed(false);
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("JSON", "json");
+                fc.setFileFilter(filter);
+                int returnVal = fc.showOpenDialog(jFrame);
+                
+                // Si el usuario ha escogido archivo
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    // Cargamos el File y lo convertimos a objetos Java
+                    archivoJson = fc.getSelectedFile();
+                    cargarConjuntoDesdeJson(archivoJson);
+                    
+                    if ( !fileLoadError ){
+                        desactivarBotonesCardLayout();
+                        limpiarCardLayout();
+                        activarBotonesCardLayout();
+                        rellenarCards(true);
+                    }
+                }
+                break;
+            case "quitarPrincipal":
+                for (Item item : itemsDisponibles){
+                    if (item.getTipo().equals(boton.getName())){
+                        item.removePrincipalById(Integer.parseInt(boton.getToolTipText()));
+                        rellenarCards(false);
+                    }
+                }
+                break;
+            case "quitarSecundario":
+                for (Item item : itemsDisponibles){
+                    if (item.getTipo().equals(boton.getName())){
+                        item.removeSecundarioById(Integer.parseInt(boton.getToolTipText()));
+                        rellenarCards(false);
+                    }
+                }
+                break;
+            default:
+                JOptionPane.showMessageDialog(new JFrame(), 
+                    "No se reconoce el comando a ejecutar.",
+                    "Error desconocido", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+        
     }
     
+    /**
+     * Deasactiva todos los botones que controlan el CardLayout al cargar el
+     * programa y no haber datos en el mismo o justo antes de cargar un Set
+     */
+    private void desactivarBotonesCardLayout(){
+        cabeza.setEnabled(false);
+        hombros.setEnabled(false);
+        cuello.setEnabled(false);
+        torso.setEnabled(false);
+        manos.setEnabled(false);
+        brazales.setEnabled(false);
+        cintura.setEnabled(false);
+        piernas.setEnabled(false);
+        dedoIzq.setEnabled(false);
+        dedoDer.setEnabled(false);
+        pies.setEnabled(false);
+        arma.setEnabled(false);
+        secundaria.setEnabled(false);
+    }
+    
+    /**
+     * Eliminamos todos los elementos de las Cards para cargar un Set nuevo
+     */
+    private void limpiarCardLayout(){
+        cabezaCard.removeAll();
+        hombrosCard.removeAll();
+        cuelloCard.removeAll();
+        torsoCard.removeAll();
+        manosCard.removeAll();
+        brazalesCard.removeAll();
+        cinturaCard.removeAll();
+        piernasCard.removeAll();
+        dedoIzqCard.removeAll();
+        dedoDerCard.removeAll();
+        piesCard.removeAll();
+        armaCard.removeAll();
+        secundariaCard.removeAll();
+    }
+    
+    
+    /**
+     * Despues de cargar un Set, habilita solo los botones de las Cards que 
+     * contendrán información
+     */
+    private void activarBotonesCardLayout(){
+        
+        for(Item item : itemsDisponibles){
+        
+            switch (item.getTipo()) {
+            case "cabeza":
+                cabeza.setEnabled(true);
+                break;
+            case "hombros":
+                hombros.setEnabled(true);
+                break;
+            case "cuello":
+                cuello.setEnabled(true);
+                break;
+            case "torso":
+                torso.setEnabled(true);
+                break;
+            case "manos":
+                manos.setEnabled(true);
+                break;
+            case "brazales":
+                brazales.setEnabled(true);
+                break;
+            case "cintura":
+                cintura.setEnabled(true);
+                break;
+            case "piernas":
+                piernas.setEnabled(true);
+                break;
+            case "dedoIzquierdo":
+                dedoIzq.setEnabled(true);
+                break;
+            case "dedoDerecho":
+                dedoDer.setEnabled(true);
+                break;
+            case "pies":
+                pies.setEnabled(true);
+                break;
+            case "arma":
+                arma.setEnabled(true);
+                break;
+            case "secundaria":
+                secundaria.setEnabled(true);
+                break;
+            default:
+                //throw new AssertionError();
+                break;
+            }
+        }
+    }
+    
+    
+    private void rellenarCards(boolean primeraEjecucion){
+        
+        JPanel parent;
+        String tipo;
+        
+        if(primeraEjecucion){
+            for(Item item : itemsDisponibles){
+
+                switch (item.getTipo()) {
+                case "cabeza":
+                    parent = cabezaCard;
+                    break;
+                case "hombros":
+                    parent = hombrosCard;
+                    break;
+                case "cuello":
+                    parent = cuelloCard;
+                    break;
+                case "torso":
+                    parent = torsoCard;
+                    break;
+                case "manos":
+                    parent = manosCard;
+                    break;
+                case "brazales":
+                    parent = brazalesCard;
+                    break;
+                case "cintura":
+                    parent = cinturaCard;
+                    break;
+                case "piernas":
+                    parent = piernasCard;
+                    break;
+                case "dedoIzquierdo":
+                    parent = dedoIzqCard;
+                    break;
+                case "dedoDerecho":
+                    parent = dedoDerCard;
+                    break;
+                case "pies":
+                    parent = piesCard;
+                    break;
+                case "arma":
+                    parent = armaCard;
+                    break;
+                case "secundaria":
+                    parent = secundariaCard;
+                    break;
+                default:
+                    parent = new JPanel();
+                    //throw new AssertionError();
+                    break;
+                }
+
+                // Icono y nombre del Item
+                JPanel header = new JPanel();
+                header.add(new JLabel(new ImageIcon ( "resources/" + item.getImagen() )));
+                header.add(new JLabel(item.nombre));
+
+                
+                // Stats Principales del item y selector de stats principales
+                JPanel principales = new JPanel(new GridLayout(0, 2));
+                //principales.setLayout(new BoxLayout(principales, BoxLayout.Y_AXIS));
+
+                for(int statId : item.principales){
+                    String statNombre = statsParser.getPrincipalById(statId);
+                    JButton tempButton = new JButton("");
+                    tempButton.setActionCommand("quitarPrincipal");
+                    tempButton.setToolTipText(String.valueOf(statId));
+                    tempButton.setName(item.getTipo());
+                    tempButton.setText("Quitar Stat");
+                    tempButton.addActionListener(this);
+                    principales.add(new JLabel(statNombre));
+                    principales.add(tempButton);
+                }
+
+                DefaultComboBoxModel<Stat> modelPrincipal = new DefaultComboBoxModel(statsParser.getPrincipalesAsStatArrayList().toArray());
+                JComboBox selectorPrincipal = new JComboBox();
+                selectorPrincipal.setModel(modelPrincipal);
+                principales.add(selectorPrincipal);
+                principales.add(new JButton("Añadir"));
+                
+                
+                // Stats Secundarios del item y selector de stats secundarios
+                JPanel secundarios = new JPanel(new GridLayout(0, 2));
+                //secundarios.setLayout(new BoxLayout(secundarios, BoxLayout.Y_AXIS));
+                for(int statId : item.secundarios){
+                    String statNombre = statsParser.getSecundarioById(statId);
+                    JButton tempButton = new JButton("");
+                    tempButton.setActionCommand("quitarSecundario");
+                    tempButton.setToolTipText(String.valueOf(statId));
+                    tempButton.setName(item.getTipo());
+                    tempButton.setText("Quitar Stat");
+                    tempButton.addActionListener(this);
+                    secundarios.add(new JLabel(statNombre));
+                    secundarios.add(tempButton);
+                }
+
+                DefaultComboBoxModel<Stat> modelSecundario = new DefaultComboBoxModel(statsParser.getSecundariosAsStatArrayList().toArray());
+                JComboBox selectorSecundario = new JComboBox();
+                selectorSecundario.setModel(modelSecundario);
+                secundarios.add(selectorSecundario);
+                secundarios.add(new JButton("Añadir"));
+                
+//                JButton addStat = new JButton("Añadir");
+//                selectorStats.addActionListener((ActionEvent e) -> {
+//                    System.out.println(selectorStats.getSelectedItem());
+//                });
+
+                parent.add(header);
+                parent.add(principales);
+                parent.add(secundarios);
+                parent.revalidate();
+            }
+        } else {
+        
+            switch (ultimaCardSeleccionada) {
+                case "Cabeza":
+                    parent = cabezaCard;
+                    tipo = "cabeza";
+                    break;
+                case "Hombros":
+                    parent = hombrosCard;
+                    tipo = "hombros";
+                    break;
+                case "Cuello":
+                    parent = cuelloCard;
+                    tipo = "cuello";
+                    break;
+                case "Torso":
+                    parent = torsoCard;
+                    tipo = "torso";
+                    break;
+                case "Manos":
+                    parent = manosCard;
+                    tipo = "manos";
+                    break;
+                case "Brazales":
+                    parent = brazalesCard;
+                    tipo = "brazales";
+                    break;
+                case "Cintura":
+                    parent = cinturaCard;
+                    tipo = "cintura";
+                    break;
+                case "Piernas":
+                    parent = piernasCard;
+                    tipo = "piernas";
+                    break;
+                case "Dedo Izq":
+                    parent = dedoIzqCard;
+                    tipo = "dedoIzquierdo";
+                    break;
+                case "Dedo Der":
+                    parent = dedoDerCard;
+                    tipo = "dedoDerecho";
+                    break;
+                case "Pies":
+                    parent = piesCard;
+                    tipo = "pies";
+                    break;
+                case "Arma":
+                    parent = armaCard;
+                    tipo = "arma";
+                    break;
+                case "Secundaria":
+                    parent = secundariaCard;
+                    tipo = "secundaria";
+                    break;
+                default:
+                    parent = new JPanel();
+                    tipo = "";
+                    //throw new AssertionError();
+                    break;
+                }
+                
+                
+            for(Item item : itemsDisponibles){
+            
+                if(item.getTipo().equals(tipo)){
+                    parent.removeAll();
+
+                    // Icono y nombre del Item
+                    JPanel header = new JPanel();
+                    header.add(new JLabel(new ImageIcon ( "resources/" + item.getImagen() )));
+                    header.add(new JLabel(item.nombre));
+
+
+                    // Stats Principales del item y selector de stats principales
+                    JPanel principales = new JPanel(new GridLayout(0, 2));
+                    //principales.setLayout(new BoxLayout(principales, BoxLayout.Y_AXIS));
+
+                    for(int statId : item.principales){
+                        String statNombre = statsParser.getPrincipalById(statId);
+                        JButton tempButton = new JButton("");
+                        tempButton.setActionCommand("quitarPrincipal");
+                        tempButton.setToolTipText(String.valueOf(statId));
+                        tempButton.setName(item.getTipo());
+                        tempButton.setText("Quitar Stat");
+                        tempButton.addActionListener(this);
+                        principales.add(new JLabel(statNombre));
+                        principales.add(tempButton);
+                    }
+
+                    DefaultComboBoxModel<Stat> modelPrincipal = new DefaultComboBoxModel(statsParser.getPrincipalesAsStatArrayList().toArray());
+                    JComboBox selectorPrincipal = new JComboBox();
+                    selectorPrincipal.setModel(modelPrincipal);
+                    principales.add(selectorPrincipal);
+                    principales.add(new JButton("Añadir"));
+
+
+                    // Stats Secundarios del item y selector de stats secundarios
+                    JPanel secundarios = new JPanel(new GridLayout(0, 2));
+                    //secundarios.setLayout(new BoxLayout(secundarios, BoxLayout.Y_AXIS));
+                    for(int statId : item.secundarios){
+                        String statNombre = statsParser.getSecundarioById(statId);
+                        JButton tempButton = new JButton("");
+                        tempButton.setActionCommand("quitarSecundario");
+                        tempButton.setToolTipText(String.valueOf(statId));
+                        tempButton.setName(item.getTipo());
+                        tempButton.setText("Quitar Stat");
+                        tempButton.addActionListener(this);
+                        secundarios.add(new JLabel(statNombre));
+                        secundarios.add(tempButton);
+                    }
+
+                    DefaultComboBoxModel<Stat> modelSecundario = new DefaultComboBoxModel(statsParser.getSecundariosAsStatArrayList().toArray());
+                    JComboBox selectorSecundario = new JComboBox();
+                    selectorSecundario.setModel(modelSecundario);
+                    secundarios.add(selectorSecundario);
+                    secundarios.add(new JButton("Añadir"));
+
+    //                JButton addStat = new JButton("Añadir");
+    //                selectorStats.addActionListener((ActionEvent e) -> {
+    //                    System.out.println(selectorStats.getSelectedItem());
+    //                });
+
+                    parent.add(header);
+                    parent.add(principales);
+                    parent.add(secundarios);
+                    parent.revalidate();
+                }
+            }
+
+        }
+        
+        
+    
+    }
     
     /**
      * CARDLAYOUT LISTENER
      * 
      * Esta clase se utiliza para crear el ActionListener de los botones que
-     * cambian la pestaña del JPanel que contiene los items.
+     * cambian la pestaña (Card) del JPanel que contiene los items.
      */
     private class ItemsCardLayoutListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             JButton boton = (JButton) e.getSource();
             itemsCardLayout.show(center, boton.getText());
+            ultimaCardSeleccionada = boton.getText();
         }
     }
 }

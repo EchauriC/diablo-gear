@@ -8,7 +8,7 @@
     "item":{
         "nombre" : "CORONA DE SUNWUKO",
         "tipo": "cabeza",
-        "principales" : ["Huecos (1)", "750p. de destreza"],
+        "principales" : [4, 0],
         "secundarios" : [],
         "principalesMax" : 4,
         "secundariosMax" : 2,
@@ -17,7 +17,7 @@
     "item":{
         "nombre" : "EQUILIBRIO DE SUNWUKO",
         "tipo": "hombros",
-        "principales" : ["100p. de resistencia a todos los elementos", "500p. de destreza"],
+        "principales" : [6, 0],
         "secundarios" : [],
         "principalesMax" : 4,
         "secundariosMax" : 2,
@@ -26,7 +26,7 @@
     "item":{
         "nombre" : "ESPLENDOR DE SUNWUKO",
         "tipo": "cuello",
-        "principales" : ["Huecos (1)", "750p. de destreza"],
+        "principales" : [4, 0],
         "secundarios" : [],
         "principalesMax" : 4,
         "secundariosMax" : 2,
@@ -35,7 +35,7 @@
     "item":{
         "nombre" : "ALMA DE SUNWUKO",
         "tipo": "torso",
-        "principales" : ["Huecos (3)", "500p. de destreza"],
+        "principales" : [4, 0],
         "secundarios" : [],
         "principalesMax" : 4,
         "secundariosMax" : 2,
@@ -44,7 +44,7 @@
     "item":{
         "nombre" : "ZARPA DE SUNWUKO",
         "tipo": "manos",
-        "principales" : ["10% de probabilidad de golpe crítico", "750p. de destreza"],
+        "principales" : [10, 0],
         "secundarios" : [],
         "principalesMax" : 4,
         "secundariosMax" : 2,
@@ -53,7 +53,7 @@
     "item":{
         "nombre" : "LEOTARDOS DE SUNWUKO",
         "tipo": "piernas",
-        "principales" : ["Huecos (2)", "500p. de destreza"],
+        "principales" : [4, 0],
         "secundarios" : [],
         "principalesMax" : 4,
         "secundariosMax" : 2,
