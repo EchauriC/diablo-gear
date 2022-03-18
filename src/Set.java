@@ -168,4 +168,56 @@ public class Set {
         }
         return items;
     }
+
+    public Item getCabeza() {
+        return cabeza;
+    }
+
+    public Item getHombros() {
+        return hombros;
+    }
+
+    public Item getCuello() {
+        return cuello;
+    }
+
+    public Item getTorso() {
+        return torso;
+    }
+
+    public Item getManos() {
+        return manos;
+    }
+
+    public Item getBrazales() {
+        return brazales;
+    }
+
+    public Item getCintura() {
+        return cintura;
+    }
+
+    public Item getPiernas() {
+        return piernas;
+    }
+
+    public Item getDedoIzquierdo() {
+        return dedoIzquierdo;
+    }
+
+    public Item getDedoDerecho() {
+        return dedoDerecho;
+    }
+
+    public Item getPies() {
+        return pies;
+    }
+
+    public Item getArma() {
+        return arma;
+    }
+
+    public Item getSecundaria() {
+        return secundaria;
+    }
 }

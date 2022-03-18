@@ -1,6 +1,9 @@
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.GridLayout;
@@ -8,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.logging.Level;
@@ -19,7 +23,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -80,7 +83,8 @@ public class Ventana implements ActionListener{
     JPanel piesCard;
     JPanel armaCard;
     JPanel secundariaCard;
-    
+    JComboBox selectorPrincipal;
+    JComboBox selectorSecundario;
     
     JPanel east;
     JPanel south;
@@ -88,7 +92,7 @@ public class Ventana implements ActionListener{
     // Control de errores
     boolean fileLoadError;
     
-    String ultimaCardSeleccionada;
+    String ultimaCardSeleccionada = "";
     
     public Ventana(){
         
@@ -105,7 +109,7 @@ public class Ventana implements ActionListener{
         new Ventana();
     }
     
-    
+   
     /* Cargamos la insterfaz básica del programa */
     void cargarUIBasica(){
     // Creacion de frame y sus propiedades
@@ -114,7 +118,7 @@ public class Ventana implements ActionListener{
         jFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 //        public static final Image LOGO = new ImageIcon("img/logo.png").getImage();
 //        setIconImage(LOGO);
-        jFrame.setSize(800,600);
+        jFrame.setSize(600,500);
 //        setLocationRelativeTo(null);
         
         //Panel norte, sus componentes y listeners
@@ -125,15 +129,19 @@ public class Ventana implements ActionListener{
         
         JButton cargarDefault = new JButton("Cargar Seleccionado");
         JButton cargarArchivo = new JButton("Cargar Archivo");
+        JButton guardarArchivo = new JButton("Guardar Archivo");
         // Aplicamos los ActionCommand que serán utilizados para filtrar en el ActionListener
         cargarDefault.setActionCommand("default");
         cargarArchivo.setActionCommand("file");
+        guardarArchivo.setActionCommand("guardar");
         cargarDefault.addActionListener(this);
         cargarArchivo.addActionListener(this);
+        guardarArchivo.addActionListener(this);
         
         north.add(opcionesDefault);
         north.add(cargarDefault);
         north.add(cargarArchivo);
+        //north.add(guardarArchivo);
         
         //Panel west sus componentes y listeners
         west = new JPanel(new GridLayout(0, 2));
@@ -384,6 +392,51 @@ public class Ventana implements ActionListener{
                     }
                 }
                 break;
+//            case "guardar":
+//                // create `ObjectMapper` instance
+//                ObjectMapper mapper = new ObjectMapper();
+//
+//                // create a JSON object
+//                ObjectNode set = mapper.createObjectNode();
+//                set.put("nombre", conjunto.getNombre());
+//                ArrayNode bonusNode = new ObjectMapper().createArrayNode();
+//                for(String beneficio : conjunto.getBonus()){
+//                    bonusNode.add(beneficio);
+//                }
+//                
+//                set.put("bonus", bonusNode);
+//                
+//                for( Item item : conjunto.getAllItems()){
+//                
+//                    ObjectNode subItem = mapper.createObjectNode();
+//                    subItem.put( "nombre", item.getNombre());
+//                    subItem.put( "tipo", item.getTipo());
+//                    ArrayNode principalesNode = new ObjectMapper().createArrayNode();
+//                    for(int princ : item.getPrincipales()){
+//                        principalesNode.add(princ);
+//                    }
+//                    subItem.put( "principales", principalesNode);
+//                    ArrayNode secundariosNode = new ObjectMapper().createArrayNode();
+//                    for(int sec : item.getPrincipales()){
+//                        secundariosNode.add(sec);
+//                    }
+//                    subItem.put( "secundarios", secundariosNode);
+//                    subItem.put( "principalesMax", item.getPrincipalesMax());
+//                    subItem.put( "secundariosMax", item.getSecundariosMax());
+//                    subItem.put( "imagen", item.getImagen());
+//                    set.("item", subItem );
+//                }
+//
+//                // append address to user
+//                
+//                String jsonStr="";
+//                try {
+//                    jsonStr = mapper.writeValueAsString(set);
+//                } catch (JsonProcessingException ex) {
+//                    Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//                System.out.println(jsonStr);
+//                break;
             case "quitarPrincipal":
                 for (Item item : itemsDisponibles){
                     if (item.getTipo().equals(boton.getName())){
@@ -400,9 +453,30 @@ public class Ventana implements ActionListener{
                     }
                 }
                 break;
+            case "addPrincipal":
+                int idPrincipal = ((Stat)selectorPrincipal.getSelectedItem()).getKey();
+                if (devMode)System.out.println(idPrincipal);
+                for (Item item : itemsDisponibles){
+                    if (item.getTipo().equals(boton.getName())){
+                        item.addPrincipalById(idPrincipal);
+                    }
+                }
+                rellenarCards(false);
+                break;
+            case "addSecundario":
+                int idSecundaria = ((Stat)selectorSecundario.getSelectedItem()).getKey();
+                if (devMode)System.out.println(idSecundaria);
+                for (Item item : itemsDisponibles){
+                    if (item.getTipo().equals(boton.getName())){
+                        item.addSecundarioById(idSecundaria);
+                    }
+                }
+                rellenarCards(false);
+                break;
             default:
                 JOptionPane.showMessageDialog(new JFrame(), 
-                    "No se reconoce el comando a ejecutar.",
+                    "No se reconoce el comando a ejecutar.\n"
+                            + "Comando: " + boton.getActionCommand(),
                     "Error desconocido", 
                     JOptionPane.ERROR_MESSAGE);
         }
@@ -582,11 +656,15 @@ public class Ventana implements ActionListener{
                 }
 
                 DefaultComboBoxModel<Stat> modelPrincipal = new DefaultComboBoxModel(statsParser.getPrincipalesAsStatArrayList().toArray());
-                JComboBox selectorPrincipal = new JComboBox();
+                selectorPrincipal = new JComboBox();
                 selectorPrincipal.setModel(modelPrincipal);
+                JButton addPrincipal = new JButton("");
+                addPrincipal.setActionCommand("addPrincipal");
+                addPrincipal.setName(item.getTipo());
+                addPrincipal.setText("Añadir Stat");
+                addPrincipal.addActionListener(this);
                 principales.add(selectorPrincipal);
-                principales.add(new JButton("Añadir"));
-                
+                principales.add(addPrincipal);
                 
                 // Stats Secundarios del item y selector de stats secundarios
                 JPanel secundarios = new JPanel(new GridLayout(0, 2));
@@ -604,15 +682,15 @@ public class Ventana implements ActionListener{
                 }
 
                 DefaultComboBoxModel<Stat> modelSecundario = new DefaultComboBoxModel(statsParser.getSecundariosAsStatArrayList().toArray());
-                JComboBox selectorSecundario = new JComboBox();
+                selectorSecundario = new JComboBox();
                 selectorSecundario.setModel(modelSecundario);
+                JButton addSecundario = new JButton("");
+                addSecundario.setActionCommand("addSecundario");
+                addSecundario.setName(item.getTipo());
+                addSecundario.setText("Añadir Stat");
+                addSecundario.addActionListener(this);
                 secundarios.add(selectorSecundario);
-                secundarios.add(new JButton("Añadir"));
-                
-//                JButton addStat = new JButton("Añadir");
-//                selectorStats.addActionListener((ActionEvent e) -> {
-//                    System.out.println(selectorStats.getSelectedItem());
-//                });
+                secundarios.add(addSecundario);
 
                 parent.add(header);
                 parent.add(principales);
@@ -677,6 +755,7 @@ public class Ventana implements ActionListener{
                 default:
                     parent = new JPanel();
                     tipo = "";
+                    //TODO
                     //throw new AssertionError();
                     break;
                 }
@@ -710,10 +789,15 @@ public class Ventana implements ActionListener{
                     }
 
                     DefaultComboBoxModel<Stat> modelPrincipal = new DefaultComboBoxModel(statsParser.getPrincipalesAsStatArrayList().toArray());
-                    JComboBox selectorPrincipal = new JComboBox();
+                    selectorPrincipal = new JComboBox();
                     selectorPrincipal.setModel(modelPrincipal);
+                    JButton addPrincipal = new JButton("");
+                    addPrincipal.setActionCommand("addPrincipal");
+                    addPrincipal.setName(item.getTipo());
+                    addPrincipal.setText("Añadir Stat");
+                    addPrincipal.addActionListener(this);
                     principales.add(selectorPrincipal);
-                    principales.add(new JButton("Añadir"));
+                    principales.add(addPrincipal);
 
 
                     // Stats Secundarios del item y selector de stats secundarios
@@ -732,10 +816,15 @@ public class Ventana implements ActionListener{
                     }
 
                     DefaultComboBoxModel<Stat> modelSecundario = new DefaultComboBoxModel(statsParser.getSecundariosAsStatArrayList().toArray());
-                    JComboBox selectorSecundario = new JComboBox();
+                    selectorSecundario = new JComboBox();
                     selectorSecundario.setModel(modelSecundario);
+                    JButton addSecundario = new JButton("");
+                    addSecundario.setActionCommand("addSecundario");
+                    addSecundario.setName(item.getTipo());
+                    addSecundario.setText("Añadir Stat");
+                    addSecundario.addActionListener(this);
                     secundarios.add(selectorSecundario);
-                    secundarios.add(new JButton("Añadir"));
+                    secundarios.add(addSecundario);
 
     //                JButton addStat = new JButton("Añadir");
     //                selectorStats.addActionListener((ActionEvent e) -> {

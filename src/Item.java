@@ -79,41 +79,88 @@ public class Item {
     }
     
     public void removePrincipalById(int id){
-        int[] temp = new int[principales.length - 1]; 
+        if(principales.length > 0){
+            int[] temp = new int[principales.length - 1]; 
  
-        // copy all the elements in the original to proxy array except the one at index 
-        for (int i = 0, k = 0; i < principales.length; i++) { 
- 
-            // check if index is crossed, continue without copying 
-            if (principales[i] == id) { 
-                continue; 
-            } 
- 
-            // else copy the element
-            temp[k++] = principales[i]; 
+            // copy all the elements in the original to proxy array except the one at index 
+            for (int i = 0, k = 0; i < principales.length; i++) { 
+
+                // check if index is crossed, continue without copying 
+                if (principales[i] == id) { 
+                    continue; 
+                } 
+
+                // else copy the element
+                temp[k++] = principales[i]; 
+            }
+
+            principales = temp;
         }
-        
-        principales = temp;
-        
     }
 
     public void removeSecundarioById(int id){
-        int[] temp = new int[secundarios.length - 1]; 
+        if(secundarios.length > 0){
+            int[] temp = new int[secundarios.length - 1]; 
+
+            // copy all the elements in the original to proxy array except the one at index 
+            for (int i = 0, k = 0; i < secundarios.length; i++) { 
+
+                // check if index is crossed, continue without copying 
+                if (secundarios[i] == id) { 
+                    continue; 
+                } 
+
+                // else copy the element
+                temp[k++] = secundarios[i]; 
+            }
+
+            secundarios = temp;
+        }
+        
+    }
+    
+    public void addPrincipalById(int id){
+        boolean encontrado = false;
+        int[] temp = new int[principales.length + 1]; 
  
         // copy all the elements in the original to proxy array except the one at index 
-        for (int i = 0, k = 0; i < secundarios.length; i++) { 
+        for (int i = 0; i < principales.length; i++) { 
  
             // check if index is crossed, continue without copying 
-            if (secundarios[i] == id) { 
-                continue; 
+            if (principales[i] == id) { 
+                encontrado = true;
             } 
  
             // else copy the element
-            temp[k++] = secundarios[i]; 
+            temp[i] = principales[i]; 
         }
         
-        secundarios = temp;
+        if(!encontrado){
+            temp[principales.length] = id;
+            principales = temp;
+        }
+    }
+    
+    public void addSecundarioById(int id){
+        boolean encontrado = false;
+        int[] temp = new int[secundarios.length + 1]; 
+ 
+        // copy all the elements in the original to proxy array except the one at index 
+        for (int i = 0; i < secundarios.length; i++) { 
+ 
+            // check if index is crossed, continue without copying 
+            if (secundarios[i] == id) { 
+                encontrado = true;
+            } 
+ 
+            // else copy the element
+            temp[i] = secundarios[i]; 
+        }
         
+        if(!encontrado){
+            temp[secundarios.length] = id;
+            secundarios = temp;
+        }
     }
         
     @Override
